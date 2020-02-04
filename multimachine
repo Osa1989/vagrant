@@ -1,0 +1,30 @@
+# Multi machine with dhcp private network
+
+class VagrantPlugins::ProviderVirtualBox::Action::Network
+  def dhcp_server_matches_config?(dhcp_server, config)
+    true
+  end
+end
+
+BOX_IMAGE = "geerlingguy/centos8"
+NODE_COUNT = 3
+
+Vagrant.configure("2") do |config|
+  config.vm.define "control", primary: true do |control|
+    control.vm.box = BOX_IMAGE
+    control.vm.hostname = "control.osa-vagrant.net"
+
+    control.vm.disk :disk, primary: true, size: "10GB"
+  end
+  
+  (1..NODE_COUNT).each do |i|
+    config.vm.define "node0#{i}" do |node|
+      node.vm.box = BOX_IMAGE
+      node.vm.hostname = "node0#{i}.osa-vagrant.net"
+      node.vm.disk :disk, primary: true, size: "10GB"
+      node.vm.disk :disk, size: "5GB"
+    end
+  end
+  config.vm.network "private_network", type: "dhcp"
+
+end
