@@ -13,7 +13,6 @@ Vagrant.configure("2") do |config|
   config.vm.define "control", primary: true do |control|
     control.vm.box = BOX_IMAGE
     control.vm.hostname = "control.osa-vagrant.net"
-
     control.vm.disk :disk, primary: true, size: "10GB"
   end
   
